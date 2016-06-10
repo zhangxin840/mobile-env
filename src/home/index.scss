@@ -1,5 +1,55 @@
-body{
-    h1 {
-        font-size: 10px;
+body {
+  h1 {
+      font-size: 20px;
+  }
+}
+
+$cellHeight: 50px;
+
+.chart {
+  color: white;
+  margin: auto;
+  width: 100%;
+
+  .row{
+    display: flex;
+    margin: 0px 0px;
+    line-height: $cellHeight;
+
+    .spacer{
+      min-width: 70px;
+      padding-right: 10px;
+      text-align: right;
+
     }
+
+    .wrapper {
+      flex-grow: 1;
+      display: flex;
+
+      .cell {
+        flex-grow: 1;
+        min-width: 70px;
+        text-align: center;
+      }
+
+      .case{
+        cursor: pointer;
+      }
+    }
+
+    .browser{
+      background-color: #663377;
+    }
+
+    .name{
+      background-color: #765432;
+    }
+
+    .case{
+      background-color: #778899;
+    }
+
+
+  }
 }
