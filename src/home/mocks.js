@@ -23,7 +23,7 @@ var devices = {
       "meituan": {
         "probability": 1,
       },
-      "dianping": {
+      "qq": {
         "probability": 0,
       }
     }
