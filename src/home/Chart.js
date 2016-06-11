@@ -13,10 +13,10 @@ var Browsers = React.createClass({
   render: function() {
     var browsers = [];
 
-    for(var key in this.state.browsers){
+    for(var key in this.props.data){
       browsers.push(
         <span key={key} className="cell browser">
-          {this.state.browsers[key].name}
+          {this.props.data[key].name}
         </span>
       );
     }
@@ -41,7 +41,7 @@ var Case = React.createClass({
   render: function() {
     return (
       <span className="cell case">
-        {this.state.data.probability}
+        {this.props.data.probability}
       </span>
     );
   }
@@ -62,15 +62,16 @@ var Row = React.createClass({
   render: function() {
     var cases = [];
 
-    for(var key in this.state.browsers){
+    console.log("rendering row:", this.props.data);
+    for(var key in this.props.browsers){
       cases.push(
-        <Case key={this.state.device + "-" + key} data={this.state.cases[key]} />
+        <Case key={this.props.device + "-" + key} data={this.props.data.cases[key]} />
       );
     }
 
     return (
       <div className="row">
-        <span className="spacer name">{this.state.name}</span>
+        <span className="spacer name">{this.props.data.name}</span>
         <div className="wrapper cases">
           {cases}
         </div>
@@ -91,9 +92,9 @@ var Rows = React.createClass({
   render: function() {
     var rows = [];
 
-    for(var key in this.state.rows){
+    for(var key in this.props.rows){
       rows.push(
-        <Row key={key} device={key} browsers={this.state.browsers} data={this.state.rows[key]}/>
+        <Row key={key} device={key} browsers={this.props.browsers} data={this.props.rows[key]}/>
       );
     }
 
@@ -105,15 +106,17 @@ var Rows = React.createClass({
 
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
+      console.log("Checking remote");
       ref.on('value', function(snapshot) {
         if((validator && validator(snapshot.val())) || (!validator && snapshot.val())){
-          console.log("Have Data");
+          console.log("Received Data");
           resolve(snapshot.val());
         }else{
-          // console.log("No Data");
-          // console.log("Start set default");
+          console.log("No Data");
+          console.log("Start set default");
           ref.set(defaultData).then(function(){
             console.log("Default setted");
+            // value event is triggerd before this callback
           });
         }
       });
@@ -131,24 +134,26 @@ var Chart = React.createClass({
     };
   },
   componentWillMount: function() {
-    // database.ref('charts/test1/rows').set(this.state.rows);
+    var ref = database.ref('charts/test6/rows');
+
     // this.bindAsObject(ref, 'rows');
-    var ref = database.ref('charts/test5/rows');
+
+    // ref.on('value', (snapshot) => {
+    //   // console.log("received", snapshot.val());
+    //   this.setState({
+    //     rows: snapshot.val()
+    //   });
+    // });
 
     var validateRows = function(data){
       return !!(data && data.xiaomi);
     };
-
-    this.bindAsObject(ref, 'rows');
-
-    ref.on('value', function(snapshot) {
-      console.log(snapshot.val())
+    prepareData(ref, this.state.rows, validateRows).then((data) => {
+      console.log(data);
+        this.setState({
+          rows: data
+        });
     });
-
-    // prepareData(ref, this.state.rows, validateRows).then((data) => {
-    //   console.log(data);
-    //
-    // });
   },
   componentDidMount: function() {
     database.ref('users/zx').set({
