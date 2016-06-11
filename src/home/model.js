@@ -19,18 +19,23 @@ var browsers = {
 var devices = {
   "iphone5": {
     "name": "iPhone5",
+    "ratio": "50"
   },
   "iphone6": {
     "name": "iPhone6",
+    "ratio": "30"
   },
   "xiaomi": {
     "name": "XiaoMi",
+    "ratio": "10"
   },
   "huawei": {
     "name": "HuaWei",
+    "ratio": "5"
   },
   "samsung": {
     "name": "Samsung",
+    "ratio": "3"
   }
 };
 

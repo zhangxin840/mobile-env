@@ -20,11 +20,11 @@ var Title = React.createClass({
   },
   render: function() {
     return (
-      <h1 className="title">
-        Issue ID:
-        <input onChange={ this.onInputChange } value={ this.state.title } />
-        <button onClick={ this.onClick }>Get！</button>
-      </h1>
+      <div className="title">
+        <span className="label">Issue ID:</span>
+        <input class="idInput" onChange={ this.onInputChange } value={ this.state.title } />
+        <button class="search" onClick={ this.onClick }>Go</button>
+      </div>
     );
   }
 });

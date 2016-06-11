@@ -5,7 +5,7 @@ import { Title } from './Title';
 export default class App extends Component {
   render() {
     return (
-      <article>
+      <article className="container">
         <Title />
         <Chart />
       </article>

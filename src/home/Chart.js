@@ -3,6 +3,17 @@ import { browsers, rows } from './model';
 import React, { Component } from 'react';
 import ReactFireMixin from 'reactfire';
 import { database } from './database';
+import _ from 'lodash';
+
+var probabilityNames = {
+  "-1": "+", // Known
+  "0": "正常",
+  "1": "极少",
+  "2": "偶发",
+  "3": "必现"
+};
+
+var probalitiesLoop = [-1, 3, 2, 0];
 
 var Browsers = React.createClass({
   getInitialState: function() {
@@ -34,14 +45,36 @@ var Browsers = React.createClass({
 
 var Case = React.createClass({
   getInitialState: function() {
-    return {data: this.props.data};
+    return {
+      data: this.props.data,
+    };
   },
   componentDidMount: function() {
   },
+  onClick: function() {
+    var getNextValue = function(loop, val){
+      var current = loop.indexOf(val);
+      var nextPosition = (current >= (loop.length - 1)) ? 0 : (current + 1);
+
+      return loop[nextPosition];
+    };
+
+    var next = getNextValue(probalitiesLoop, this.props.data.probability);
+
+    var evt = new CustomEvent('onCaseChange', {
+      detail: {
+        device: this.props.device,
+        browser: this.props.browser,
+        next: next
+      }
+    });
+
+    window.dispatchEvent(evt);
+  },
   render: function() {
     return (
-      <span className="cell case">
-        {this.props.data.probability}
+      <span onClick={this.onClick} className={"cell case " + "probability_" + this.props.data.probability}>
+        {probabilityNames[this.props.data.probability]}
       </span>
     );
   }
@@ -65,7 +98,7 @@ var Row = React.createClass({
     console.log("rendering row:", this.props.data);
     for(var key in this.props.browsers){
       cases.push(
-        <Case key={this.props.device + "-" + key} data={this.props.data.cases[key]} />
+        <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.data.cases[key]} />
       );
     }
 
@@ -99,7 +132,7 @@ var Rows = React.createClass({
     }
 
     return (
-      <div>{rows}</div>
+      <div className="rows">{rows}</div>
     );
   }
 });
@@ -134,7 +167,7 @@ var Chart = React.createClass({
     };
   },
   componentWillMount: function() {
-    var initDataBase = function(){
+    var initDatabase = () => {
       var id = window.location.hash.split("/").pop() || 'default';
       var ref = database.ref('issues/' + id);
 
@@ -154,12 +187,33 @@ var Chart = React.createClass({
           this.setState({
             rows: snapshot.val()
           });
+          console.log(snapshot.val());
         });
       });
     };
 
-    // window.onpopstate = initDataBase.bind(this);
-    window.onhashchange = initDataBase.bind(this);
+    window.onhashchange = initDatabase;
+
+    window.addEventListener('onCaseChange',  (e) => {
+      var id = window.location.hash.split("/").pop() || 'default';
+      var ref = database.ref('issues/' + id);
+
+      console.log('case changed', e.detail);
+      var rows = this.state.rows
+
+      var theCase = _.get(rows, [e.detail.device, 'cases', e.detail.browser]);
+      theCase.probability = e.detail.next;
+
+      this.setState({
+        rows: rows
+      });
+
+      ref.set(this.state.rows).then(function(){
+        console.log("Saved");
+      });
+    });
+
+    initDatabase.apply(this)
   },
   componentDidMount: function() {
     database.ref('users/zx').set({

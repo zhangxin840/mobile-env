@@ -2,14 +2,40 @@ body {
   h1 {
       font-size: 20px;
   }
+
+  font-family: 'Gotham','Varela Round',sans-serif;
 }
 
-$cellHeight: 50px;
+$cellHeight: 40px;
+
+.container{
+  width: 650px;
+  margin: auto;
+}
+
+.title{
+  line-height: 80px;
+  font-size: 15px;
+
+  input{
+    display: inline-block;
+    vertical-align: middle;
+    width: 60px;
+  }
+
+  button{
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: middle;
+  }
+}
 
 .chart {
   color: white;
   margin: auto;
   width: 100%;
+  font-size: 15px;
+
 
   .row{
     display: flex;
@@ -17,18 +43,19 @@ $cellHeight: 50px;
     line-height: $cellHeight;
 
     .spacer{
-      min-width: 70px;
-      padding-right: 10px;
-      text-align: right;
+      min-width: 100px;
+      padding-right: 0px;
+      text-align: center;
     }
 
     .wrapper {
       flex-grow: 1;
+      flex-shrink: none;
       display: flex;
 
       .cell {
         flex-grow: 1;
-        min-width: 70px;
+        min-width: 100px;
         text-align: center;
       }
 
@@ -38,17 +65,36 @@ $cellHeight: 50px;
     }
 
     .browser{
-      background-color: #663377;
+      background-color: #247BA0;
     }
 
     .name{
-      background-color: #765432;
+      background-color: #70C1B3;
     }
 
     .case{
-      background-color: #778899;
+      background-color: #F5F5F5;
+      color: #777;
+
+      &.probability_2{
+        background-color: #F3FFBD;
+      }
+
+      // &.probability_0{
+      //   background-color: #F3FFBD;
+      // }
+
+      &.probability_3{
+        background-color: #F3FFBD;
+      }
     }
+  }
 
+  .rows .row:hover{
+    opacity: .8;
+  }
 
+  .rows .cell:hover{
+    opacity: .6;
   }
 }
