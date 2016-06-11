@@ -8,7 +8,21 @@ var config = {
   storageBucket: "project-1927292578732193511.appspot.com",
 };
 
-var app = firebase.initializeApp(config);
-var database = firebase.database();
+var app = window.app;
+var database = window.database;
 
-export { database };
+var init = function(){
+  if(!app){
+    app = firebase.initializeApp(config);
+    window.app = app;
+  }
+
+  if(!database){
+    database = firebase.database();
+    window.database = database;
+  }
+};
+
+init();
+
+export { database, app };

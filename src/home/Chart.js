@@ -1,10 +1,12 @@
 // tutorial13.js
-import { browsers, devices } from './mocks';
+import { browsers, rows } from './model';
 import React, { Component } from 'react';
+import ReactFireMixin from 'reactfire';
+import { database } from './database';
 
 var Browsers = React.createClass({
   getInitialState: function() {
-    return {browsers: browsers};
+    return {browsers: this.props.data};
   },
   componentDidMount: function() {
   },
@@ -32,9 +34,7 @@ var Browsers = React.createClass({
 
 var Case = React.createClass({
   getInitialState: function() {
-    return {data: this.props.data || {
-      "probability": -1
-    }} ;
+    return {data: this.props.data};
   },
   componentDidMount: function() {
   },
@@ -50,13 +50,14 @@ var Case = React.createClass({
 var Row = React.createClass({
   getInitialState: function() {
     return {
-      browsers: browsers,
+      browsers: this.props.browsers,
       device: this.props.device,
       name: this.props.data.name,
       cases: this.props.data.cases
     };
   },
   componentDidMount: function() {
+
   },
   render: function() {
     var cases = [];
@@ -78,18 +79,21 @@ var Row = React.createClass({
   }
 });
 
-var Devices = React.createClass({
+var Rows = React.createClass({
   getInitialState: function() {
-    return {devices: devices};
+    return {
+      rows: this.props.rows,
+      browsers: this.props.browsers
+    };
   },
   componentDidMount: function() {
   },
   render: function() {
     var rows = [];
 
-    for(var key in this.state.devices){
+    for(var key in this.state.rows){
       rows.push(
-        <Row key={key} device={key} data={this.state.devices[key]}/>
+        <Row key={key} device={key} browsers={this.state.browsers} data={this.state.rows[key]}/>
       );
     }
 
@@ -99,17 +103,64 @@ var Devices = React.createClass({
   }
 });
 
+var prepareData = function(ref, defaultData, validator){
+  var promise = new Promise(function(resolve, reject){
+      ref.on('value', function(snapshot) {
+        if((validator && validator(snapshot.val())) || (!validator && snapshot.val())){
+          console.log("Have Data");
+          resolve(snapshot.val());
+        }else{
+          // console.log("No Data");
+          // console.log("Start set default");
+          ref.set(defaultData).then(function(){
+            console.log("Default setted");
+          });
+        }
+      });
+  });
+
+  return promise;
+};
+
 var Chart = React.createClass({
+  mixins: [ReactFireMixin],
   getInitialState: function() {
-    return {};
+    return {
+      browsers: browsers,
+      rows: rows
+    };
+  },
+  componentWillMount: function() {
+    // database.ref('charts/test1/rows').set(this.state.rows);
+    // this.bindAsObject(ref, 'rows');
+    var ref = database.ref('charts/test5/rows');
+
+    var validateRows = function(data){
+      return !!(data && data.xiaomi);
+    };
+
+    this.bindAsObject(ref, 'rows');
+
+    ref.on('value', function(snapshot) {
+      console.log(snapshot.val())
+    });
+
+    // prepareData(ref, this.state.rows, validateRows).then((data) => {
+    //   console.log(data);
+    //
+    // });
   },
   componentDidMount: function() {
+    database.ref('users/zx').set({
+      username: "zx",
+      time: new Date() + ""
+    });
   },
   render: function() {
     return (
       <section className="chart">
-        <Browsers />
-        <Devices />
+        <Browsers data={this.state.browsers} />
+        <Rows browsers={this.state.browsers} rows={this.state.rows}/>
       </section>
     );
   }
