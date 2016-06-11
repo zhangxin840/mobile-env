@@ -134,26 +134,32 @@ var Chart = React.createClass({
     };
   },
   componentWillMount: function() {
-    var ref = database.ref('charts/test6/rows');
+    var initDataBase = function(){
+      var id = window.location.hash.split("/").pop() || 'default';
+      var ref = database.ref('issues/' + id);
 
-    // this.bindAsObject(ref, 'rows');
+      // this.bindAsObject(ref, 'rows');
 
-    // ref.on('value', (snapshot) => {
-    //   // console.log("received", snapshot.val());
-    //   this.setState({
-    //     rows: snapshot.val()
-    //   });
-    // });
-
-    var validateRows = function(data){
-      return !!(data && data.xiaomi);
-    };
-    prepareData(ref, this.state.rows, validateRows).then((data) => {
-      console.log(data);
+      var validateRows = function(data){
+        return !!(data && data.xiaomi);
+      };
+      prepareData(ref, this.state.rows, validateRows).then((data) => {
+        // console.log(data);
         this.setState({
           rows: data
         });
-    });
+
+        ref.on('value', (snapshot) => {
+          // console.log("received", snapshot.val());
+          this.setState({
+            rows: snapshot.val()
+          });
+        });
+      });
+    };
+
+    // window.onpopstate = initDataBase.bind(this);
+    window.onhashchange = initDataBase.bind(this);
   },
   componentDidMount: function() {
     database.ref('users/zx').set({
