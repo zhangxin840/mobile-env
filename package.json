@@ -11,7 +11,8 @@
     "lint:fix": "eslint src routes --fix",
     "up2": "webpack-dev-server --content-base build/public --hot --history-api-fallback --port 3000",
     "up": "node server.js",
-    "deploy": "npm run build:release && cd build && lean deploy"
+    "up:build": "firebase serve",
+    "deploy": "npm run build:release && firebase deploy"
   },
   "repository": {
     "type": "git",
