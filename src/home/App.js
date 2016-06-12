@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Chart } from './Chart';
 import { Search } from './Search';
-import { List } from './List';
+import { Records } from './Records';
 
 export default class App extends Component {
   componentDidMount() {
@@ -18,7 +18,7 @@ export default class App extends Component {
         </section>
         <Search />
         <Chart />
-        <List />
+        <Records />
       </article>
     );
   }

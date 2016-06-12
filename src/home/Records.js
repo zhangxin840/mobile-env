@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { database } from './database';
+import { browsers, rows as defaultRows, devices } from './model';
 
-
-var List = React.createClass({
+var Records = React.createClass({
   getInitialState: function() {
     return {
       issues: {}
@@ -36,9 +36,9 @@ var List = React.createClass({
     }
 
     return (
-      <div className="list">
+      <div className="records">
         <h2>Recorded issues:</h2>
-        <ul className="">
+        <ul className="list">
           {list}
         </ul>
       </div>
@@ -46,4 +46,4 @@ var List = React.createClass({
   }
 });
 
-export { List };
+export { Records };

@@ -1,149 +1,9 @@
 // tutorial13.js
 import { browsers, rows as defaultRows, devices } from './model';
 import React, { Component } from 'react';
-import ReactFireMixin from 'reactfire';
 import { database } from './database';
+import { Table } from './Table';
 import _ from 'lodash';
-
-var probabilityNames = {
-  "-1": "+", // Known
-  "0": "正常",
-  "1": "极少",
-  "2": "偶发",
-  "3": "必现"
-};
-
-var probalitiesLoop = [-1, 3, 2, 0];
-
-var Browsers = React.createClass({
-  getInitialState: function() {
-    return {browsers: this.props.data};
-  },
-  componentDidMount: function() {
-  },
-  render: function() {
-    var browsers = [];
-
-    for(var key in this.props.data){
-      browsers.push(
-        <span key={key} className="cell browser">
-          {this.props.data[key].name}
-        </span>
-      );
-    }
-
-    return (
-      <div className="row">
-        <span className="spacer"> </span>
-        <div className="wrapper browsers">
-          {browsers}
-        </div>
-      </div>
-    );
-  }
-});
-
-var Case = React.createClass({
-  getInitialState: function() {
-    return {
-      data: this.props.data,
-    };
-  },
-  componentDidMount: function() {
-  },
-  onClick: function() {
-    var getNextValue = function(loop, val){
-      var current = loop.indexOf(val);
-      var nextPosition = (current >= (loop.length - 1)) ? 0 : (current + 1);
-
-      return loop[nextPosition];
-    };
-
-    var next = getNextValue(probalitiesLoop, this.props.data.probability);
-
-    var evt = new CustomEvent('onCaseChange', {
-      detail: {
-        device: this.props.device,
-        browser: this.props.browser,
-        next: next
-      }
-    });
-
-    window.dispatchEvent(evt);
-  },
-  render: function() {
-    return (
-      <span onClick={this.onClick} className={"cell case " + "probability_" + this.props.data.probability}>
-        {probabilityNames[this.props.data.probability]}
-      </span>
-    );
-  }
-});
-
-var Row = React.createClass({
-  getInitialState: function() {
-    return {
-      browsers: this.props.browsers,
-      device: this.props.device,
-      name: this.props.data.name,
-      cases: this.props.data.cases
-    };
-  },
-  componentDidMount: function() {
-
-  },
-  render: function() {
-    var cases = [];
-    // console.log("rendering row:", this.props.data);
-
-    for(var key in this.props.browsers){
-      cases.push(
-        <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.data.cases[key]} />
-      );
-    }
-
-    return (
-      <div className="row">
-        <span className="spacer name">{this.props.data.name}</span>
-        <div className="wrapper cases">
-          {cases}
-        </div>
-      </div>
-    );
-  }
-});
-
-var Rows = React.createClass({
-  getInitialState: function() {
-    return {
-      rows: this.props.rows,
-      browsers: this.props.browsers
-    };
-  },
-  componentDidMount: function() {
-  },
-  render: function() {
-    var rows = [];
-
-    for(var key in this.props.rows){
-      rows.push(
-        <Row key={key} device={key} browsers={this.props.browsers} data={this.props.rows[key]}/>
-      );
-    }
-
-    rows.sort(function(a, b){
-      return devices[b.props.device].ratio - devices[a.props.device].ratio;
-    });
-
-    console.log(rows[0]);
-
-    return (
-      <div className="rows">
-        {rows}
-      </div>
-    );
-  }
-});
 
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
@@ -172,7 +32,6 @@ var getId = () => {
 };
 
 var Chart = React.createClass({
-  mixins: [ReactFireMixin],
   getInitialState: function() {
     return {
       id: getId(),
@@ -247,8 +106,7 @@ var Chart = React.createClass({
     return (
       <section className="chart">
         <h3 className="legend">Mobile Compatibility Chart {this.state.id ? "-" : ""} {this.state.id}</h3>
-        <Browsers data={this.state.browsers} />
-        <Rows browsers={this.state.browsers} rows={this.state.rows}/>
+        <Table browsers={browsers} devices={devices} rows={this.state.rows}/>
         <h3 className="label">Description</h3>
         <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
         </textarea>
