@@ -28,8 +28,8 @@ $cellHeight: 40px;
   margin: auto;
 }
 
-.title{
-  line-height: 80px;
+.search{
+  line-height: 60px;
 
   input{
     display: inline-block;
@@ -47,18 +47,15 @@ $cellHeight: 40px;
 }
 
 .chart {
-  color: white;
   margin: auto;
   width: 100%;
-  font-size: 15px;
 
-  h2{
-    color: #888;
+  .legend{
     text-align: center;
+    font-size: 20px;
   }
 
-  h3{
-    color: #888;
+  .label{
     text-align: left;
     margin: 30px 0 10px 0;
   }
@@ -93,10 +90,12 @@ $cellHeight: 40px;
 
     .browser{
       background-color: #70C1B3;
+      color: white;
     }
 
     .name{
       background-color: #B2DBBF;
+      color: white;
     }
 
     .case{
@@ -147,8 +146,12 @@ $cellHeight: 40px;
   .issue{
     margin: 5px 0;
 
+    .link{
+      display: inline-block;
+      min-width: 90px;
+    }
+
     .description{
-      margin-left: 20px;
     }
   }
 }

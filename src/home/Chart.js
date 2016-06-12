@@ -1,5 +1,5 @@
 // tutorial13.js
-import { browsers, rows as defaultRows } from './model';
+import { browsers, rows as defaultRows, devices } from './model';
 import React, { Component } from 'react';
 import ReactFireMixin from 'reactfire';
 import { database } from './database';
@@ -94,8 +94,8 @@ var Row = React.createClass({
   },
   render: function() {
     var cases = [];
+    // console.log("rendering row:", this.props.data);
 
-    console.log("rendering row:", this.props.data);
     for(var key in this.props.browsers){
       cases.push(
         <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.data.cases[key]} />
@@ -131,8 +131,16 @@ var Rows = React.createClass({
       );
     }
 
+    rows.sort(function(a, b){
+      return devices[b.props.device].ratio - devices[a.props.device].ratio;
+    });
+
+    console.log(rows[0]);
+
     return (
-      <div className="rows">{rows}</div>
+      <div className="rows">
+        {rows}
+      </div>
     );
   }
 });
@@ -238,10 +246,10 @@ var Chart = React.createClass({
   render: function() {
     return (
       <section className="chart">
-        <h2>Mobile Compatibility Chart {this.state.id ? "-" : ""} {this.state.id}</h2>
+        <h3 className="legend">Mobile Compatibility Chart {this.state.id ? "-" : ""} {this.state.id}</h3>
         <Browsers data={this.state.browsers} />
         <Rows browsers={this.state.browsers} rows={this.state.rows}/>
-        <h3>Description</h3>
+        <h3 className="label">Description</h3>
         <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
         </textarea>
       </section>

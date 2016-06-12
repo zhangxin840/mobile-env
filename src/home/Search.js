@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 
-var Title = React.createClass({
+var Search = React.createClass({
   getInitialState: function() {
     return {title: window.location.hash.split("/").pop()};
   },
@@ -20,10 +20,10 @@ var Title = React.createClass({
   },
   render: function() {
     return (
-      <div className="title">
+      <div className="search">
         <span className="label">Issue ID:</span>
-        <input class="idInput" onChange={ this.onInputChange } value={ this.state.title } />
-        <button class="search" onClick={ this.onClick }>Get</button>
+        <input className="idInput" onChange={ this.onInputChange } value={ this.state.title } />
+        <button className="" onClick={ this.onClick }>创建 / 查询</button>
       </div>
     );
   }
@@ -31,4 +31,4 @@ var Title = React.createClass({
 
 
 
-export { Title };
+export { Search };

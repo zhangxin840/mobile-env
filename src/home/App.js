@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Chart } from './Chart';
-import { Title } from './Title';
+import { Search } from './Search';
 import { List } from './List';
 
 export default class App extends Component {
@@ -16,7 +16,7 @@ export default class App extends Component {
             <a target="_blank" href="http://mp.weixin.qq.com/s?__biz=MzIzMDI3MTAzMA==&mid=2247483681&idx=1&sn=cffc82ffb3e0baf628a818152e141e01">关于移动端环境表</a>
           </h2>
         </section>
-        <Title />
+        <Search />
         <Chart />
         <List />
       </article>
