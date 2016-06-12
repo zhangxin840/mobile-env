@@ -1,14 +1,14 @@
 var browsers = {
   "meituan": {
-    "name": "Meituan",
+    "name": "美团",
     "ratio": "50"
   },
   "dianping": {
-    "name": "Dianping",
+    "name": "点评",
     "ratio": "30"
   },
   "weichat": {
-    "name": "Weichat",
+    "name": "微信",
     "ratio": "20"
   },
   "qq": {
@@ -16,7 +16,7 @@ var browsers = {
     "ratio": "10"
   },
   "default": {
-    "name": "Default",
+    "name": "原生",
     "ratio": "5"
   }
 };
@@ -31,11 +31,11 @@ var devices = {
     "ratio": "30"
   },
   "xiaomi": {
-    "name": "XiaoMi",
+    "name": "小米",
     "ratio": "10"
   },
   "huawei": {
-    "name": "HuaWei",
+    "name": "华为",
     "ratio": "5"
   },
   "samsung": {

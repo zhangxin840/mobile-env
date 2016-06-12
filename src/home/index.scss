@@ -2,13 +2,22 @@ body {
   h1 {
       font-size: 20px;
   }
-  
+
   font-family: 'Gotham','Varela Round',sans-serif;
   color: #888;
   font-size: 15px;
 
   input, textarea{
     color: #888;
+  }
+
+  a{
+    text-decoration: none;
+    color: #70C1B3;
+
+    &:hover{
+      text-decoration: underline;
+    }
   }
 }
 
@@ -134,4 +143,12 @@ $cellHeight: 40px;
 
 .list{
   margin-top: 50px;
+
+  .issue{
+    margin: 5px 0;
+
+    .description{
+      margin-left: 20px;
+    }
+  }
 }

@@ -24,17 +24,11 @@ var List = React.createClass({
 
     for(var key in this.state.issues){
       list.push(
-        <li key={key}>
-          <a href={"#/issues/" + key}>{key}</a>:
-          <span>
+        <li key={key} className="issue">
+          <a href={"#/issues/" + key}>{key}</a>
+          <span className="description">
             {
-              this.state.issues[key].description.substring(0, 20) +
-              this.state.issues[key].description.length > 20 ? '...' : ''
-            }
-          </span>
-          <span>
-            {
-              this.state.issues[key].description.substring(0, 20) + ((this.state.issues[key].description.length > 20) ? "..." : "")
+              this.state.issues[key].description.substring(0, 30) + ((this.state.issues[key].description.length > 30) ? "..." : "")
             }
           </span>
         </li>
