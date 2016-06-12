@@ -1,18 +1,23 @@
 var browsers = {
   "meituan": {
-    "name": "Meituan"
+    "name": "Meituan",
+    "ratio": "50"
   },
   "dianping": {
-    "name": "Dianping"
+    "name": "Dianping",
+    "ratio": "30"
   },
   "weichat": {
-    "name": "Weichat"
+    "name": "Weichat",
+    "ratio": "20"
   },
   "qq": {
-    "name": "QQ"
+    "name": "QQ",
+    "ratio": "10"
   },
   "default": {
-    "name": "Default"
+    "name": "Default",
+    "ratio": "5"
   }
 };
 

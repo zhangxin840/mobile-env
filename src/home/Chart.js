@@ -1,5 +1,5 @@
 // tutorial13.js
-import { browsers, rows } from './model';
+import { browsers, rows as defaultRows } from './model';
 import React, { Component } from 'react';
 import ReactFireMixin from 'reactfire';
 import { database } from './database';
@@ -139,17 +139,18 @@ var Rows = React.createClass({
 
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
-      console.log("Checking remote");
+      // console.log("Checking remote");
       ref.on('value', function(snapshot) {
+        console.log("Reveived Data");
         if((validator && validator(snapshot.val())) || (!validator && snapshot.val())){
-          console.log("Received Data");
+          console.log("Valid Data");
           resolve(snapshot.val());
         }else{
-          console.log("No Data");
-          console.log("Start set default");
+          console.log("No valid Data");
+          // console.log("Start set default");
           ref.set(defaultData).then(function(){
-            console.log("Default setted");
             // value event is triggerd before this callback
+            // console.log("Default setted");
           });
         }
       });
@@ -158,74 +159,91 @@ var prepareData = function(ref, defaultData, validator){
   return promise;
 };
 
+var getId = () => {
+  return window.location.hash.split("/").pop();
+};
+
 var Chart = React.createClass({
   mixins: [ReactFireMixin],
   getInitialState: function() {
     return {
+      id: getId(),
+      ref: database.ref('issues/' + (getId() || 'default')),
       browsers: browsers,
-      rows: rows
+      rows: defaultRows,
+      description: ""
     };
   },
+  onDescriptionChange: function(e) {
+    this.setState({
+      description: e.target.value
+    });
+  },
+  saveChart: function(){
+    this.state.ref.set({
+      rows: this.state.rows,
+      description: this.state.description
+    }).then(function(){
+      console.log("Chart Saved");
+    });
+  },
   componentWillMount: function() {
-    var initDatabase = () => {
-      var id = window.location.hash.split("/").pop() || 'default';
-      var ref = database.ref('issues/' + id);
+    var initChart = () => {
+      this.setState({
+        id: getId(),
+        ref: database.ref('issues/' + (getId() || 'default')),
+        rows: defaultRows,
+        description: ""
+      });
 
-      // this.bindAsObject(ref, 'rows');
-
-      var validateRows = function(data){
-        return !!(data && data.xiaomi);
+      var validateChart = function(data){
+        return !!(data && data.rows && data.rows.xiaomi);
       };
-      prepareData(ref, this.state.rows, validateRows).then((data) => {
+
+      var defaultData = {rows: defaultRows, description: ""};
+
+      prepareData(this.state.ref, defaultData, validateChart).then((data) => {
         // console.log(data);
         this.setState({
-          rows: data
+          ...data
         });
 
-        ref.on('value', (snapshot) => {
+        this.state.ref.on('value', (snapshot) => {
           // console.log("received", snapshot.val());
           this.setState({
-            rows: snapshot.val()
+            ...snapshot.val()
           });
-          console.log(snapshot.val());
+          // console.log(snapshot.val());
         });
       });
     };
 
-    window.onhashchange = initDatabase;
+    window.onhashchange = initChart;
 
     window.addEventListener('onCaseChange',  (e) => {
-      var id = window.location.hash.split("/").pop() || 'default';
-      var ref = database.ref('issues/' + id);
-
-      console.log('case changed', e.detail);
-      var rows = this.state.rows
-
+      var rows = this.state.rows;
       var theCase = _.get(rows, [e.detail.device, 'cases', e.detail.browser]);
       theCase.probability = e.detail.next;
 
       this.setState({
         rows: rows
       });
-
-      ref.set(this.state.rows).then(function(){
-        console.log("Saved");
-      });
+      this.saveChart();
     });
 
-    initDatabase.apply(this)
+    initChart.apply(this);
   },
   componentDidMount: function() {
-    database.ref('users/zx').set({
-      username: "zx",
-      time: new Date() + ""
-    });
   },
   render: function() {
     return (
       <section className="chart">
+        <h2>Mobile Compatibility Chart {this.state.id ? "-" : ""} {this.state.id}</h2>
         <Browsers data={this.state.browsers} />
         <Rows browsers={this.state.browsers} rows={this.state.rows}/>
+        <h3>Description</h3>
+        <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
+        </textarea>
       </section>
     );
   }

@@ -2,31 +2,38 @@ body {
   h1 {
       font-size: 20px;
   }
-
+  
   font-family: 'Gotham','Varela Round',sans-serif;
+  color: #888;
+  font-size: 15px;
+
+  input, textarea{
+    color: #888;
+  }
 }
 
 $cellHeight: 40px;
 
 .container{
-  width: 650px;
+  max-width: 650px;
   margin: auto;
 }
 
 .title{
   line-height: 80px;
-  font-size: 15px;
 
   input{
     display: inline-block;
     vertical-align: middle;
     width: 60px;
+    margin-left: 10px;
   }
 
   button{
     display: inline-block;
     margin-left: 10px;
     vertical-align: middle;
+    color: #888;
   }
 }
 
@@ -36,11 +43,22 @@ $cellHeight: 40px;
   width: 100%;
   font-size: 15px;
 
+  h2{
+    color: #888;
+    text-align: center;
+  }
+
+  h3{
+    color: #888;
+    text-align: left;
+    margin: 30px 0 10px 0;
+  }
 
   .row{
     display: flex;
     margin: 0px 0px;
     line-height: $cellHeight;
+    -webkit-user-select: none;
 
     .spacer{
       min-width: 100px;
@@ -101,4 +119,19 @@ $cellHeight: 40px;
   .rows .cell:hover{
     opacity: .6;
   }
+
+  .description{
+    display: block;
+    width: 100%;
+    margin: 0px 0;
+    height: 100px;
+    border-color: #eee;
+    padding: 10px;
+    resize: none;
+    box-sizing: border-box;
+  }
+}
+
+.list{
+  margin-top: 50px;
 }
