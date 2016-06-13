@@ -21,7 +21,7 @@ var CaseCount = React.createClass({
   render: function() {
     return (
       <span onClick={this.onClick} className={"cell case " + "count " + this.props.data.count}>
-        {this.props.data.count}
+        {this.props.data.count > 0 ? this.props.data.count : ""}
       </span>
     );
   }

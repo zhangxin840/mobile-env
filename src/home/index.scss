@@ -24,7 +24,7 @@ body {
 $cellHeight: 40px;
 
 .container{
-  max-width: 650px;
+  max-width: 850px;
   margin: auto;
 }
 
@@ -47,6 +47,16 @@ $cellHeight: 40px;
 }
 
 .table {
+  .rows{
+    .row:hover{
+      opacity: .8;
+    }
+
+    .cell:hover{
+      opacity: .6;
+    }
+  }
+
   .row{
     display: flex;
     margin: 0px 0px;
@@ -82,7 +92,7 @@ $cellHeight: 40px;
     }
 
     .case{
-      background-color: #F9F9F9;
+      background-color: #FCFCFC;
       color: #888;
 
       &.probability_2{
@@ -132,14 +142,6 @@ $cellHeight: 40px;
   .rows{
     .case{
       cursor: pointer;
-    }
-
-    .row:hover{
-      opacity: .8;
-    }
-
-    .cell:hover{
-      opacity: .6;
     }
   }
 }
