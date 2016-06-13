@@ -1,9 +1,8 @@
-// tutorial13.js
-import { browsers, rows as defaultRows, devices } from './model';
 import React, { Component } from 'react';
+import _ from 'lodash';
+import { browsers, tableData, devices } from './model';
 import { database } from './database';
 import { Table } from './Table';
-import _ from 'lodash';
 
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
@@ -37,7 +36,7 @@ var Chart = React.createClass({
       id: getId(),
       ref: database.ref('issues/' + (getId() || 'default')),
       browsers: browsers,
-      rows: defaultRows,
+      rows: tableData,
       description: ""
     };
   },
@@ -59,7 +58,7 @@ var Chart = React.createClass({
       this.setState({
         id: getId(),
         ref: database.ref('issues/' + (getId() || 'default')),
-        rows: defaultRows,
+        rows: tableData,
         description: ""
       });
 
@@ -67,7 +66,7 @@ var Chart = React.createClass({
         return !!(data && data.rows && data.rows.xiaomi);
       };
 
-      var defaultData = {rows: defaultRows, description: ""};
+      var defaultData = {rows: tableData, description: ""};
 
       prepareData(this.state.ref, defaultData, validateChart).then((data) => {
         // console.log(data);
@@ -89,8 +88,8 @@ var Chart = React.createClass({
 
     window.addEventListener('onCaseChange',  (e) => {
       var rows = this.state.rows;
-      var theCase = _.get(rows, [e.detail.device, 'cases', e.detail.browser]);
-      theCase.probability = e.detail.next;
+      var theCase = _.get(rows, [e.detail.device, e.detail.browser]);
+      theCase.probability = e.detail.data;
 
       this.setState({
         rows: rows
@@ -105,8 +104,8 @@ var Chart = React.createClass({
   render: function() {
     return (
       <section className="chart">
-        <h3 className="legend">Mobile Compatibility Chart {this.state.id ? "-" : ""} {this.state.id}</h3>
-        <Table browsers={browsers} devices={devices} rows={this.state.rows}/>
+        <h3 className="legend">兼容性缺陷分布 {this.state.id ? "-" : ""} {this.state.id}</h3>
+        <Table browsers={browsers} devices={devices} rows={this.state.rows} type="issues"/>
         <h3 className="label">Description</h3>
         <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
         </textarea>

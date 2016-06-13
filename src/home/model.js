@@ -44,30 +44,26 @@ var devices = {
   }
 };
 
-var rows = {};
+var tableData = {};
 
-var init = function () {
-  var key, key2;
-  var cases;
+var caseData = {
+  "probability": -1
+}
 
-  for (key in devices) {
-    cases = {}
+var init = function (caseData) {
+  var i, j;
 
-    for (key2 in browsers) {
-      cases[key2] = {
-        "probability": -1
-      }
-    }
+  for (i in devices) {
+    tableData[i] = {}
 
-    rows[key] = {
-      "name": devices[key].name,
-      "cases": cases
+    for (j in browsers) {
+      tableData[i][j] = caseData;
     }
   }
 };
 
-init();
+init(caseData);
 
 export {
-  browsers, devices, rows
+  browsers, devices, tableData
 }

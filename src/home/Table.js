@@ -1,16 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { Case } from './Case';
-
-var probabilityNames = {
-  "-1": "+", // Known
-  "0": "正常",
-  "1": "极少",
-  "2": "偶发",
-  "3": "必现"
-};
-
-var probalitiesLoop = [-1, 3, 2, 0];
+import { CaseCount } from './CaseCount';
 
 var Browsers = React.createClass({
   getInitialState: function() {
@@ -42,12 +33,7 @@ var Browsers = React.createClass({
 
 var Row = React.createClass({
   getInitialState: function() {
-    return {
-      browsers: this.props.browsers,
-      device: this.props.device,
-      name: this.props.data.name,
-      cases: this.props.data.cases
-    };
+    return {};
   },
   componentDidMount: function() {
 
@@ -57,14 +43,20 @@ var Row = React.createClass({
     // console.log("rendering row:", this.props.data);
 
     for(var key in this.props.browsers){
-      cases.push(
-        <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.data.cases[key]} />
-      );
+      if(this.props.type === 'issues'){
+        cases.push(
+          <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.cases[key]} />
+        );
+      }else{
+        cases.push(
+          <CaseCount key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.cases[key]} />
+        );
+      }
     }
 
     return (
       <div className="row">
-        <span className="spacer name">{this.props.data.name}</span>
+        <span className="spacer name">{this.props.devices[this.props.device].name}</span>
         <div className="wrapper cases">
           {cases}
         </div>
@@ -87,7 +79,7 @@ var Rows = React.createClass({
 
     for(var key in this.props.rows){
       rows.push(
-        <Row key={key} device={key} browsers={this.props.browsers} data={this.props.rows[key]}/>
+        <Row key={key} device={key} type={this.props.type} browsers={this.props.browsers} devices={this.props.devices} cases={this.props.rows[key]}/>
       );
     }
 

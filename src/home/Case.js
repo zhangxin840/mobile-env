@@ -13,9 +13,7 @@ var probalitiesLoop = [-1, 3, 2, 0];
 
 var Case = React.createClass({
   getInitialState: function() {
-    return {
-      data: this.props.data,
-    };
+    return {};
   },
   componentDidMount: function() {
   },
@@ -33,7 +31,7 @@ var Case = React.createClass({
       detail: {
         device: this.props.device,
         browser: this.props.browser,
-        next: next
+        data: next
       }
     });
 
