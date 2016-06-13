@@ -25,14 +25,16 @@ var Records = React.createClass({
   getInitialState: function() {
     return {
       cases: getDefaultCases(),
-      issues: {}
+      issues: {},
+      filtered: {}
     };
   },
   componentWillMount: function() {
     var ref = database.ref('issues');
     ref.on('value', (snapshot) => {
-      var issues = snapshot.val();
       var cases = getDefaultCases();
+      var issues = snapshot.val();
+
       var issueCases, theCase;
 
       for(var id in issues){
@@ -41,7 +43,6 @@ var Records = React.createClass({
         for(var i in devices){
           for(var j in browsers){
              theCase = issueCases[i] && issueCases[i][j] || {};
-
              if(theCase.probability >= 1){
                cases[i][j].count++;
              }
@@ -51,16 +52,41 @@ var Records = React.createClass({
 
       this.setState({
         cases: cases,
-        issues: issues
+        issues: issues,
+        filtered: issues
       });
 
       console.log(issues);
     });
+
+    window.addEventListener('onCaseClick',  (e) => {
+      var issues = this.state.issues;
+      var filtered = {};
+      var issueCases;
+      var isEmpty = true;
+
+      for(var id in issues){
+        issueCases = issues[id].cases || {};
+        if(issueCases[e.detail.device] && issueCases[e.detail.device][e.detail.browser] && issueCases[e.detail.device][e.detail.browser].probability >= 1){
+          filtered[id] = issues[id];
+          isEmpty = false;
+        }
+      }
+
+      if(isEmpty){
+        filtered = issues;
+      }
+
+      this.setState({
+        filtered: filtered
+      });
+    });
+
   },
   render: function() {
     var list = [];
 
-    for(var key in this.state.issues){
+    for(var key in this.state.filtered){
       list.push(
         <li key={key} className="issue">
           <a className="link" href={"#/issues/" + key}>{key}</a>

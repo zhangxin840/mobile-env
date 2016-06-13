@@ -55,8 +55,12 @@ $cellHeight: 40px;
     .cell:hover{
       opacity: .6;
     }
-  }
 
+    .case{
+      cursor: pointer;
+    }
+  }
+  
   .row{
     display: flex;
     margin: 0px 0px;
@@ -137,12 +141,6 @@ $cellHeight: 40px;
     padding: 10px;
     resize: none;
     box-sizing: border-box;
-  }
-
-  .rows{
-    .case{
-      cursor: pointer;
-    }
   }
 }
 
