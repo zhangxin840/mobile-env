@@ -11,14 +11,14 @@ var browsers = {
     "name": "微信",
     "ratio": 20
   },
-  "qq": {
-    "name": "QQ",
-    "ratio": 5
-  },
-  "uc": {
-    "name": "UC",
-    "ratio": 4
-  },
+  // "qq": {
+  //   "name": "QQ",
+  //   "ratio": 5
+  // },
+  // "uc": {
+  //   "name": "UC",
+  //   "ratio": 4
+  // },
   "default": {
     "name": "原生",
     "ratio": 3
@@ -46,14 +46,14 @@ var devices = {
     "name": "小米",
     "ratio": 9
   },
-  "vivo": {
-    "name": "VIVO",
-    "ratio": 7
-  },
-  "oppo": {
-    "name": "OPPO",
-    "ratio": 6
-  },
+  // "vivo": {
+  //   "name": "VIVO",
+  //   "ratio": 7
+  // },
+  // "oppo": {
+  //   "name": "OPPO",
+  //   "ratio": 6
+  // },
   "huawei": {
     "name": "华为",
     "ratio": 8
@@ -68,24 +68,6 @@ var devices = {
   }
 };
 
-var tableData = {};
-
-var init = function (caseData) {
-  var i, j;
-
-  for (i in devices) {
-    tableData[i] = {}
-
-    for (j in browsers) {
-      tableData[i][j] = {
-        "probability": -1
-      };
-    }
-  }
-};
-
-init();
-
 export {
-  browsers, devices, tableData
+  browsers, devices
 }

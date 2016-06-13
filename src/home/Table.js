@@ -5,7 +5,7 @@ import { CaseCount } from './CaseCount';
 
 var Browsers = React.createClass({
   getInitialState: function() {
-    return {browsers: this.props.data};
+    return {};
   },
   componentDidMount: function() {
   },
@@ -45,18 +45,18 @@ var Row = React.createClass({
     for(var key in this.props.browsers){
       if(this.props.type === 'issues'){
         cases.push(
-          <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.cases[key]} />
+          <Case key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.rowCases[key]} />
         );
       }else{
         cases.push(
-          <CaseCount key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.cases[key]} />
+          <CaseCount key={this.props.device + "-" + key} browser={key} device={this.props.device} data={this.props.rowCases[key]} />
         );
       }
     }
 
     return (
       <div className="row">
-        <span className="spacer name">{this.props.devices[this.props.device].name}</span>
+        <span className="spacer name">{this.props.name}</span>
         <div className="wrapper cases">
           {cases}
         </div>
@@ -67,27 +67,22 @@ var Row = React.createClass({
 
 var Rows = React.createClass({
   getInitialState: function() {
-    return {
-      rows: this.props.rows,
-      browsers: this.props.browsers
-    };
+    return {};
   },
   componentDidMount: function() {
   },
   render: function() {
     var rows = [];
 
-    for(var key in this.props.rows){
+    for(var key in this.props.devices){
       rows.push(
-        <Row key={key} device={key} type={this.props.type} browsers={this.props.browsers} devices={this.props.devices} cases={this.props.rows[key]}/>
+        <Row key={key} device={key} type={this.props.type} browsers={this.props.browsers} name={this.props.devices[key].name} rowCases={this.props.cases[key]}/>
       );
     }
 
     rows.sort((a, b) => {
       return this.props.devices[b.props.device].ratio - this.props.devices[a.props.device].ratio;
     });
-
-    console.log(rows[0]);
 
     return (
       <div className="rows">

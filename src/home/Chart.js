@@ -1,17 +1,36 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
-import { browsers, tableData, devices } from './model';
+import { browsers, devices } from './model';
 import { database } from './database';
 import { Table } from './Table';
+
+var fillDefaultCases = function(cases){
+  var i, j;
+  cases = cases || {};
+
+  for (i in devices) {
+    cases[i] = cases[i] || {}
+
+    for (j in browsers) {
+      cases[i][j] = cases[i][j] || {
+        "probability": -1
+      };
+    }
+  }
+
+  return cases;
+};
 
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
       // console.log("Checking remote");
       ref.once('value', function(snapshot) {
+        var data = snapshot.val();
+
         console.log("Reveived Data");
-        if((validator && validator(snapshot.val())) || (!validator && snapshot.val())){
+        if((validator && validator(data)) || (!validator && data)){
           console.log("Valid Data");
-          resolve(snapshot.val());
+          resolve(data);
         }else{
           console.log("No valid Data");
           // console.log("Start set default");
@@ -35,9 +54,8 @@ var Chart = React.createClass({
     return {
       id: getId(),
       ref: database.ref('issues/' + (getId() || 'default')),
-      browsers: browsers,
-      rows: tableData,
-      description: ""
+      description: "",
+      cases: fillDefaultCases({})
     };
   },
   onDescriptionChange: function(e) {
@@ -47,7 +65,7 @@ var Chart = React.createClass({
   },
   saveChart: function(){
     this.state.ref.set({
-      rows: this.state.rows,
+      cases: this.state.cases,
       description: this.state.description
     }).then(function(){
       console.log("Chart Saved");
@@ -55,30 +73,30 @@ var Chart = React.createClass({
   },
   componentWillMount: function() {
     var initChart = () => {
+      // Reset state
       this.setState({
         id: getId(),
         ref: database.ref('issues/' + (getId() || 'default')),
-        rows: tableData,
+        cases: fillDefaultCases({}),
         description: ""
       });
 
       var validateChart = function(data){
-        return !!(data && data.rows && data.rows.xiaomi);
+        return !!(data && data.cases);
       };
 
-      var defaultData = {rows: tableData, description: ""};
+      var defaultData = {cases: fillDefaultCases({}), description: ""};
 
       prepareData(this.state.ref, defaultData, validateChart).then((data) => {
         // console.log(data);
-        this.setState({
-          ...data
-        });
+        fillDefaultCases(data.cases);
+        this.setState({...data});
 
         this.state.ref.on('value', (snapshot) => {
           // console.log("received", snapshot.val());
-          this.setState({
-            ...snapshot.val()
-          });
+          var data = snapshot.val();
+          fillDefaultCases(data.cases);
+          this.setState({...data});
           // console.log(snapshot.val());
         });
       });
@@ -87,12 +105,12 @@ var Chart = React.createClass({
     window.onhashchange = initChart;
 
     window.addEventListener('onCaseChange',  (e) => {
-      var rows = this.state.rows;
-      var theCase = _.get(rows, [e.detail.device, e.detail.browser]);
+      var cases = this.state.cases;
+      var theCase = _.get(cases, [e.detail.device, e.detail.browser]);
       theCase.probability = e.detail.data;
 
       this.setState({
-        rows: rows
+        cases: cases
       });
       this.saveChart();
     });
@@ -105,7 +123,7 @@ var Chart = React.createClass({
     return (
       <section className="chart">
         <h3 className="legend">兼容性缺陷分布 {this.state.id ? "-" : ""} {this.state.id}</h3>
-        <Table browsers={browsers} devices={devices} rows={this.state.rows} type="issues"/>
+        <Table browsers={browsers} devices={devices} cases={this.state.cases} type="issues"/>
         <h3 className="label">Description</h3>
         <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
         </textarea>

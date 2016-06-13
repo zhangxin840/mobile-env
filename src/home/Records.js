@@ -1,31 +1,30 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import { database } from './database';
-import { browsers, tableData, devices } from './model';
+import { browsers, devices } from './model';
 import { Table } from './Table';
 
-var initRecordTableData = function(){
+var getDefaultCases = function(){
   var i, j;
-  var recordTable = {};
+  var cases = {};
 
   for (i in devices) {
-    recordTable[i] = {}
+    cases[i] = {}
 
     for (j in browsers) {
-      recordTable[i][j] = {
+      cases[i][j] = {
         "count": 0
       };
     }
   }
 
-  return recordTable;
+  return cases;
 };
 
 var Records = React.createClass({
   getInitialState: function() {
-
     return {
-      recordTable: initRecordTableData(),
+      cases: getDefaultCases(),
       issues: {}
     };
   },
@@ -33,26 +32,25 @@ var Records = React.createClass({
     var ref = database.ref('issues');
     ref.on('value', (snapshot) => {
       var issues = snapshot.val();
-      var recordTable = initRecordTableData();
-      var theTable, theCase;
+      var cases = getDefaultCases();
+      var issueCases, theCase;
 
       for(var id in issues){
-        theTable = issues[id].rows || {};
+        issueCases = issues[id].cases || {};
 
         for(var i in devices){
           for(var j in browsers){
-             theCase = theTable[i] && theTable[i][j] || {};
+             theCase = issueCases[i] && issueCases[i][j] || {};
 
              if(theCase.probability >= 1){
-               recordTable[i][j].count++;
+               cases[i][j].count++;
              }
           }
         }
       }
 
-
       this.setState({
-        recordTable: recordTable,
+        cases: cases,
         issues: issues
       });
 
@@ -78,7 +76,7 @@ var Records = React.createClass({
     return (
       <div className="records">
         <h2>兼容性缺陷数据统计</h2>
-        <Table className="recordTable" type="records" devices={devices} browsers={browsers} rows={this.state.recordTable}/>
+        <Table className="recordTable" type="records" devices={devices} browsers={browsers} cases={this.state.cases}/>
         <ul className="list">
           {list}
         </ul>
