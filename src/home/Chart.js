@@ -7,7 +7,7 @@ import { Table } from './Table';
 var prepareData = function(ref, defaultData, validator){
   var promise = new Promise(function(resolve, reject){
       // console.log("Checking remote");
-      ref.on('value', function(snapshot) {
+      ref.once('value', function(snapshot) {
         console.log("Reveived Data");
         if((validator && validator(snapshot.val())) || (!validator && snapshot.val())){
           console.log("Valid Data");

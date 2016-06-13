@@ -41,14 +41,14 @@ var devices = {
   "samsung": {
     "name": "Samsung",
     "ratio": 3
+  },
+  "others": {
+    "name": "Others",
+    "ratio": 1
   }
 };
 
 var tableData = {};
-
-var caseData = {
-  "probability": -1
-}
 
 var init = function (caseData) {
   var i, j;
@@ -57,12 +57,14 @@ var init = function (caseData) {
     tableData[i] = {}
 
     for (j in browsers) {
-      tableData[i][j] = caseData;
+      tableData[i][j] = {
+        "probability": -1
+      };
     }
   }
 };
 
-init(caseData);
+init();
 
 export {
   browsers, devices, tableData
