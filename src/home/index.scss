@@ -60,7 +60,7 @@ $cellHeight: 40px;
       cursor: pointer;
     }
   }
-  
+
   .row{
     display: flex;
     margin: 0px 0px;
@@ -121,6 +121,22 @@ $cellHeight: 40px;
 .chart {
   margin: auto;
   width: 100%;
+  position: relative;
+
+  &.loading{
+    .loadingImg {
+      display: block;
+    }
+  }
+
+  .loadingImg{
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    display: none;
+  }
 
   .legend{
     text-align: center;

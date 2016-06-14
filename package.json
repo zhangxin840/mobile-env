@@ -4,7 +4,7 @@
   "description": "Online chart to describe mobile compatibility issues.",
   "scripts": {
     "clean": "find build | grep 'build/' | xargs rm -rf",
-    "copy": "mkdir -p build/public && find src -name '*.html' -exec cp -prv '{}' 'build/public' ';'",
+    "copy": "mkdir -p build/public && find src '(' -name '*.html' -o -name '*.svg' ')' -exec cp -prv '{}' 'build/public' ';'",
     "build": "npm run clean && npm run copy && webpack",
     "build:release": "npm run clean && npm run copy && webpack -p --config webpack.config.release.js",
     "lint": "eslint src routes",
@@ -42,6 +42,7 @@
     "redux-devtools": "^3.3.1",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
+    "svg-react-loader": "^0.3.5",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.12.1"
   }

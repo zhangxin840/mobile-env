@@ -33,10 +33,9 @@ var prepareData = function(ref, defaultData, validator){
           resolve(data);
         }else{
           console.log("No valid Data");
-          // console.log("Start set default");
           ref.set(defaultData).then(function(){
-            // value event is triggerd before this callback
-            // console.log("Default setted");
+            console.log("Default setted");
+            resolve(defaultData);
           });
         }
       });
@@ -55,7 +54,8 @@ var Chart = React.createClass({
       id: getId(),
       ref: database.ref('issues/' + (getId() || 'default')),
       description: "",
-      cases: fillDefaultCases({})
+      cases: fillDefaultCases({}),
+      loading: true
     };
   },
   onDescriptionChange: function(e) {
@@ -78,7 +78,8 @@ var Chart = React.createClass({
         id: getId(),
         ref: database.ref('issues/' + (getId() || 'default')),
         cases: fillDefaultCases({}),
-        description: ""
+        description: "",
+        isLoading: true
       });
 
       var validateChart = function(data){
@@ -90,13 +91,19 @@ var Chart = React.createClass({
       prepareData(this.state.ref, defaultData, validateChart).then((data) => {
         // console.log(data);
         fillDefaultCases(data.cases);
-        this.setState({...data});
+        this.setState({
+          ...data,
+          isLoading: false
+        });
 
         this.state.ref.on('value', (snapshot) => {
           // console.log("received", snapshot.val());
           var data = snapshot.val();
           fillDefaultCases(data.cases);
-          this.setState({...data});
+          this.setState({
+            ...data,
+            isLoading: false
+          });
           // console.log(snapshot.val());
         });
       });
@@ -121,7 +128,8 @@ var Chart = React.createClass({
   },
   render: function() {
     return (
-      <section className="chart">
+      <section className={"chart " + (this.state.isLoading ? "loading" : "")}>
+        <img className="loadingImg" src="cube.svg" alt="" />
         <h3 className="legend">兼容性缺陷分布 {this.state.id ? "-" : ""} {this.state.id}</h3>
         <Table browsers={browsers} devices={devices} cases={this.state.cases} type="issues"/>
         <h3 className="label">Description</h3>
