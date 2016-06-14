@@ -43,7 +43,7 @@ var Records = React.createClass({
         for(var i in devices){
           for(var j in browsers){
              theCase = issueCases[i] && issueCases[i][j] || {};
-             if(theCase.probability >= 1){
+             if(theCase.probability >= 1 && id !== 'default' ){
                cases[i][j].count++;
              }
           }

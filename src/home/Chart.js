@@ -64,11 +64,18 @@ var Chart = React.createClass({
     });
   },
   saveChart: function(){
+    this.setState({
+      isLoading: true
+    });
+
     this.state.ref.set({
       cases: this.state.cases,
       description: this.state.description
-    }).then(function(){
-      console.log("Chart Saved");
+    }).then(() => {
+      this.setState({
+        isLoading: false
+      });
+      // console.log("Chart Saved");
     });
   },
   componentWillMount: function() {
@@ -119,6 +126,10 @@ var Chart = React.createClass({
       this.setState({
         cases: cases
       });
+      // this.saveChart();
+    });
+
+    window.addEventListener('onSaveChart',  (e) => {
       this.saveChart();
     });
 
@@ -130,10 +141,10 @@ var Chart = React.createClass({
     return (
       <section className={"chart " + (this.state.isLoading ? "loading" : "")}>
         <img className="loadingImg" src="cube.svg" alt="" />
-        <h3 className="legend">兼容性缺陷分布 {this.state.id ? "-" : ""} {this.state.id}</h3>
+        <h3 className="legend">兼容性缺陷分布 {(this.state.id && (this.state.id !== 'default')) ? (" - " + this.state.id) : ""} </h3>
         <Table browsers={browsers} devices={devices} cases={this.state.cases} type="issues"/>
         <h3 className="label">Description</h3>
-        <textarea onChange={this.onDescriptionChange} onBlur={this.saveChart} className="description" value={this.state.description}>
+        <textarea onChange={this.onDescriptionChange} className="description" value={this.state.description}>
         </textarea>
       </section>
     );
