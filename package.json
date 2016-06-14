@@ -1,12 +1,12 @@
 {
   "name": "mobile-env",
-  "version": "0.1.0",
-  "description": "Online chart to describe mobile compatibility issues.",
+  "version": "1.0.0",
+  "description": "Online chart to collect mobile compatibility issues.",
   "scripts": {
     "clean": "find build | grep 'build/' | xargs rm -rf",
     "copy": "mkdir -p build/public && find src '(' -name '*.html' -o -name '*.svg' ')' -exec cp -prv '{}' 'build/public' ';'",
     "build": "npm run clean && npm run copy && webpack",
-    "build:release": "npm run clean && npm run copy && webpack -p --config webpack.config.release.js",
+    "build:release": "npm run clean && npm run copy && webpack -p --define process.env.NODE_ENV='\"production\"' --config webpack.config.release.js",
     "lint": "eslint src routes",
     "lint:fix": "eslint src routes --fix",
     "up": "node server.js",
@@ -37,12 +37,8 @@
     "react-dom": "^15.1.0",
     "react-hot-loader": "^1.3.0",
     "react-redux": "^4.4.5",
-    "reactfire": "^1.0.0",
-    "redux": "^3.5.2",
-    "redux-devtools": "^3.3.1",
     "sass-loader": "^3.2.0",
     "style-loader": "^0.13.1",
-    "svg-react-loader": "^0.3.5",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.12.1"
   }

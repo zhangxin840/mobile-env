@@ -1,8 +1,4 @@
 body {
-  h1 {
-      font-size: 20px;
-  }
-
   font-family: 'Gotham', 'Varela Round', sans-serif;
   color: #888;
   font-size: 15px;
@@ -22,6 +18,20 @@ body {
 }
 
 $cellHeight: 40px;
+
+.header{
+  h1{
+    font-size: 23px;
+    margin: 30px auto 20px auto;
+  }
+
+  a{
+    display: inline-block;
+    margin-right: 30px;
+  }
+
+  margin-bottom: 20px;
+}
 
 .container{
   max-width: 600px;
