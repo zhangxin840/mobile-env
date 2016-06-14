@@ -46,10 +46,10 @@ var devices = {
     "name": "小米",
     "ratio": 9
   },
-  // "vivo": {
-  //   "name": "VIVO",
-  //   "ratio": 7
-  // },
+  "vivo": {
+    "name": "VIVO",
+    "ratio": 5
+  },
   // "oppo": {
   //   "name": "OPPO",
   //   "ratio": 6
@@ -60,7 +60,7 @@ var devices = {
   },
   "samsung": {
     "name": "Samsung",
-    "ratio": 2
+    "ratio": 6
   },
   "others": {
     "name": "Others",
