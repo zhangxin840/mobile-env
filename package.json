@@ -1,6 +1,6 @@
 {
   "name": "mobile-env",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Online chart to collect mobile compatibility issues.",
   "scripts": {
     "clean": "find build | grep 'build/' | xargs rm -rf",

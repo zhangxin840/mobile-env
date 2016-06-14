@@ -136,6 +136,7 @@ $cellHeight: 40px;
   &.loading{
     .loadingImg {
       display: block;
+      opacity: .5;
     }
   }
 
